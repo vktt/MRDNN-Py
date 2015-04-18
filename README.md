@@ -7,7 +7,9 @@ The base of this code (pretrianed deep neural networks) is taken from gdbn code 
 
 ### Dependencies
 gnumpy: http://www.cs.toronto.edu/~tijmen/gnumpy.html
-and cudamat: http://code.google.com/p/cudamat/ (for running on GPUs), or
+
+cudamat: http://code.google.com/p/cudamat/ (for running on GPUs), or
+
 npmat: http://www.cs.toronto.edu/~ilya/npmat.py) (a non-gpu cudamat simulation)
 
 ### Running the Example
