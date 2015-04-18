@@ -26,10 +26,6 @@ cudamat: http://code.google.com/p/cudamat/ (for running on GPUs), or
 
 npmat: http://www.cs.toronto.edu/~ilya/npmat.py) (a non-gpu cudamat simulation)
 
-### Running the Example
+### License 
 
-Download the gzipped data from http://www.cs.toronto.edu/~gdahl/mnist.npz.gz and unzip it into the same folder as all of the code (or change the line 
-f = num.load("mnist.npz")
-in mnistExample.py. Then you should be able to run the example with
-$ python mnistExample.py
-assuming you have obtained all the dependencies for 
+GPL v3
