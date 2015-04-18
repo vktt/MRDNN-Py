@@ -1,3 +1,19 @@
+"""
+ Copyright (c) 2013,2014, 2015 Vikrant Tomar
+ 
+ License: GPL v3. See attached LICENSE file
+
+ The above copyright notice and this permission notice shall be
+ included in all copies or substantial portions of the Software.  THE
+ SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,  EXPRESS
+ OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES  OF
+ MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT  HOLDERS
+ BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,  WHETHER IN AN
+ ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING  FROM, OUT OF OR IN
+ CONNECTION WITH THE SOFTWARE OR THE USE OR  OTHER DEALINGS IN THE
+ SOFTWARE.
+"""
 
 import numpy as np
 import gnumpy as gpu
@@ -6,48 +22,37 @@ import time
 import cPickle as pickle
 import sys, os
 
+# For plotting the error curves
 import matplotlib
-matplotlib.use('pdf') #so that it does not try to use $DISPLAY
+matplotlib.use('pdf') #so that it save the pdf of curve and does not try to use $DISPLAY
 import matplotlib.pyplot as plt
 
 try:
-	from dbn3_expEta_superfast import *
+	from mrdnn_expEta_sfast import *
 	from manifold_noPen import * 
 except:
-	sys.path.append("/home/vikrant/customToolboxes/python/dnn_mlregularized")
-	from dbn3_expEta_superfast import *
+	sys.path.append("./mrdnn/")
+	sys.path.append("./helpers/")
+	from mrdnn_expEta_sfast import *
 	from manifold_noPen import * 
 
-_featType =  'mfcc_117z'  # a2_mfcc117z, 'mfcc_117z' # or 'lpda_39z' or 'zlpda_39z'
+_featType =  'mfcc_117z'  # some features tag .. just nomenclature
 _pretrain = 0
 
 if _featType is 'mfcc_117z':
 	import xfNN_HTK_mfcc as xf
-	start_layer = 117
-	input_data = 'data_noisytr_16k_z.npz'
-	val_data = 'devset_16k_z.npz'
-	feat_dir = '/home/vikrant/data/Aurora4a_mfcc_0_z/'
-	out_layer = 121
-elif _featType is 'lpda_39z':
-	import xfNN_HTK_lpda as xf
-	start_layer = 39
-	input_data = 'data_noisytr_16k_lpda39_Z_origZmlf.npz'
-	val_data = 'devset_16k_lpda39_Z_origZmlf.npz'
-	feat_dir = '/home/vikrant/data/Aurora4a_mfcc_0/'
-	out_layer = 121
+	start_layer = 117 #dimension of the input features = dimension of the input layer of DNN
+	input_data = 'training_data.npz'
+	val_data = 'devset.npz'
+	feat_dir = '/path/to/input/features/' # for transforming the outputs
+	out_layer = 3320 # output feature dimensions
 elif _featType is 'zlpda_39z':
 	import xfNN_HTK_zlpda as xf
-	start_layer = 39
-	input_data = 'data_noisytr_16k_zlpda39_Z_origZmlf.npz'
-	val_data = 'devset_16k_zlpda39_Z_origZmlf.npz'
-	feat_dir = '/home/vikrant/data/Aurora4a_mfcc_0_z/'
-	out_layer = 121
-elif _featType is 'a2_mfcc117z':
-	import xfNN_HTK_mfcc_A2 as xf
-	start_layer = 117
-	input_data = 'data_multitr_Z.npz'
-	feat_dir = '/home/vikrant/data/Aurora2_mfcc_0_z/'
-	out_layer = 180
+	start_layer = 117 #dimension of the input features = dimension of the input layer of DNN
+	input_data = 'training_data_zlpda.npz'
+	val_data = 'devset_zlpda.npz'
+	feat_dir = '/path/to/input/features/' # for transforming the outputs
+	out_layer = 3320 # output feature dimensions
 #######################################################################################
 
 def numMistakes(targetsMB, outputs):
@@ -67,43 +72,41 @@ def sampleMinibatch(mbsz, inps, targs, mlgrphz):
 def main():
 	mbsz = 256
 	layerSizes = [start_layer, 1024, 1024, 1024, 1024, 40, out_layer]
-	scales = [0.05 for i in xrange(len(layerSizes)-1)] #weightScales 0.05
+	scales = [0.05 for i in xrange(len(layerSizes)-1)] #weightScales
 	fanOuts = [None for i in xrange(len(layerSizes)-1)]
-	# preTlearnRate = 0.005
-	# pretrain_epochs = 7
-	learnRate = 0.00001 #Gradient learning rate eta
+	learnRate = 0.001 #Gradient learning rate eta
 	learnRatesMultiplier = 0.95 # Exponentially decaying rate
 	epochs = 100
 
+	### Graph-embedding related parameters
+	t1 = 1000 #Gaussian kernel scale factor for intrinsic graph
+	t2 = 3000 #Gaussian kernel scale factor for penalty graph
+	nbrhoodsz = 10
+	mlgamma = 0.001 # Manifold regularization parameter
+
 	######################################## LOAD DATA ############################################
 	### Training data
+	## trainInps is an N x D-dimensional array. N feature vectors each having D dimensions
+	## labels is a vector of dimensionality N containing a label for each feature vector
+	# trainTargs converts the labels vector into numberic classes and  1-hot target vectors for the DNN or MRDNN training
+
 
 	print 'Loading data ...'
-		
-	# root_dir = '/home/vikrant/data/Aurora2matdata/'
-	# f = np.load( root_dir + input_data)
-	# trainInps = f['trainInps']
-	# labels = f['trainTargs'].T
-	# del f
 	
-	root_dir='/home/vikrant/data/Aurora4matdata/'
-	trainInps = pickle.load(open('/home/vikrant/data/Aurora4matdata/data_noisytr_16k_z_X.pkl'))
+	root_dir='/path/to/trainng/data/'
+	trainInps = pickle.load(open(root_dir+input_data))
 	trainInps=np.asarray(trainInps)
-	labels = pickle.load(open('/home/vikrant/data/Aurora4matdata/data_noisytr_16k_z_labels.pkl'))
+	labels = pickle.load(open('/path/to/labels/for/training/data/.pkl'))
 
+	#
 	C = np.unique(labels)
 	trainTargs = (np.tile(labels,(len(C),1)).T==C).astype(np.int32)
 	del C
 
-	### Graph-embedding related parameters
-	t1 = 1000
-	t2 = 3000
-	nbrhoodsz = 10
-	mlgamma = 0.02 # Manifold regularization parameter
+
 	
 	print 'Load graph-embedding based neighborhs'
-	root_dir += 'out_data_noisytr_16k_euclsq_z/'
-	# root_dir += 'out_data_multitr_euclsq_z/'
+	root_dir += 'path/to/manifold/graph/data/'
 	mlgrph = mlgraph()
 	mlgrph.populate(root_dir, t1, t2, nbrhoodsz)
 
@@ -132,21 +135,9 @@ def main():
 	print 'Initializing the network with architecture:', layerSizes
 	net = buildDBN(layerSizes, scales, fanOuts, Softmax(), realValuedVis = True, useReLU = True)
 	net.learnRates = [learnRate for x in net.learnRates]
-	net.learnRatesMultiplier = learnRatesMultiplier
-	# net.L2Costs = [0 for x in net.L2Costs]
+	net.learnRatesMultiplier = learnRatesMultiplier # for exponentially decaying learning rate
 	net.nestCompare = True #this flag existing is a design flaw that I might address later, for now always set it to True
-	net.mlgamma = mlgamma if mlgamma else 1.0
-
-	#net.dropouts = [0.4 for i in xrange(len(layerSizes) -1 )]
-	# net.momentum = 0.5
-	# net.nesterov = True
-
-	## Load old network 
-	# netname='DNN4_BN_lpda_39z_1024hu_20epc_500batch_eta0.3_scale0.05'
-	# mlp_dir = '/home/vikrant/data/tandem_py/noisytr/networks/' + netname
-	# mlp_path= mlp_dir + '.pkl'
-	# net = pickle.load(open(mlp_path,'rb'))
-	# epochs = 10
+	net.mlgamma = mlgamma if mlgamma else 1.0 # regularization parameter for the manifold learning constraints in the obj. fn.
 
 	if sum(net.dropouts):
 		useDropout = True
@@ -154,6 +145,7 @@ def main():
 		useDropout = False
 
 	####################################################################################
+	## Uncomment if you want to do pretraining
 	#Pretraining
 	# t = [time.time()]
 
@@ -171,19 +163,13 @@ def main():
 
 	####################################################################################
 	##### FineTuning
-	# del net
-	# net = pickle.load(open('networks/DNNMLreg5_BN_mfcc_117z_1024hu_256batch_eta0.1_scale0.05_nbrhoodsz30_newMLErrnoErrDiv/DNN_epc_4.pkl','rb'))
 	
+	# Where to save the trained networks?
 	netname='DNNML'+str(len(layerSizes)-2)+'_BN_' + _featType + '_1024hu_'+str(mbsz)+'b_eta'+str(learnRate)+'_nbrs'+str(nbrhoodsz)+'_gm'+str(mlgamma)+'_ReLU'+'_expEta'+str(net.learnRatesMultiplier)+'_L2_'+str(net.L2Costs[0])+'_noPen_sfast'
 	netDir = 'networks/'+netname
 	if not os.path.isdir(netDir):
 		os.makedirs(netDir)
 
-	# del net
-	# print netDir+'/DNN_epc_5.pkl'
-	# net = pickle.load(open( netDir+'/DNN_epc_4.pkl', 'rb' ))
-
-	# net.learnRates = [0.0025026 for x in net.learnRates]
 
 	print 'Ready for Fine-tunining'
 	t = [time.time()]
@@ -197,9 +183,10 @@ def main():
 		print 'Time taken in this epoch:', t[-1] - t[-2] , 'Total time taken:', t[-1] - t[0]
 		print
 		del net.stateML, net.actsML, net.pivt, net.actsMLpvt, net.acts, net.state
+		# Save network after every epoch
 		pickle.dump(net, open( netDir+'/DNN_epc_'+str(ep)+'.pkl', 'wb' ))
 		####################################################################################
-		# Transforming features
+		# Transforming features every 10 epochs to check recognition performance
 		if ep > 0 and ep%10 == 0:
 			print 'Now transforming features...'
 			outLayer = 5 #  Which layer to take output from
@@ -207,7 +194,7 @@ def main():
 			xf.main(netname+'_epc'+str(ep), net, nCxt, outLayer, feat_dir)
 	
 
-	####### Plot the error curves
+	####### Save the error curve plots
 
 	plt.plot(valErr, label='devset')
 	plt.hold(True)

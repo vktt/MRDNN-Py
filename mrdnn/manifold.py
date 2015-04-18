@@ -1,4 +1,21 @@
-"""Constitues a manifold graph from given parameters"""
+"""
+ Copyright (c) 2013,2014, 2015 Vikrant Tomar
+ 
+ License: GPL v3. See attached LICENSE file
+
+ The above copyright notice and this permission notice shall be
+ included in all copies or substantial portions of the Software.  THE
+ SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,  EXPRESS
+ OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES  OF
+ MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT  HOLDERS
+ BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,  WHETHER IN AN
+ ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING  FROM, OUT OF OR IN
+ CONNECTION WITH THE SOFTWARE OR THE USE OR  OTHER DEALINGS IN THE
+ SOFTWARE.
+"""
+
+
 
 import numpy as np
 import gnumpy as gpu
@@ -12,6 +29,7 @@ class mlgraph(object):
         self.idx = None
 
     def populate(self, root_dir, t1, t2 = None, nbrhoodsz = None):
+        """Constitues a manifold graph from given parameters"""
         self.t1 = t1
         self.t2 = t2 if t2 else t1
         
@@ -35,9 +53,7 @@ class mlgraph(object):
         Disti[np.isnan(Disti)] = 0.0
         Distp[np.isnan(Distp)] = 0.0
 
-        # self.vals = np.concatenate((Disti, Distp),axis=1)
         self.vals = np.concatenate((Disti.reshape(Disti.shape[0], Disti.shape[1],1), Distp.reshape(Distp.shape[0], Distp.shape[1],1)),axis=1)
-        # self.vals = self.vals.reshape(self.vals[0],self.vals[1],1)
         print self.vals.shape
         self.indx = np.concatenate((Indi, Indp),axis=1)
 

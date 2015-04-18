@@ -5,6 +5,17 @@ Manifold Regularized Deep Neural Networks written in Python using numpy and gnum
 ### Background 
 The base of this code (pretrianed deep neural networks) is taken from gdbn code written by George Dahl. http://www.cs.toronto.edu/~gdahl/. I have modified the DNN training by adding manifold regularization to his code. For a detailed overview of Manifold Regularized Neural Networks (MRDNN), please see my paper from Interspeech 2014 here: http://www.ece.mcgill.ca/~vtomar/Publications/Interspeech2014-MRDNN.pdf
 
+There is no separate documentation as of yet. But the code should be easy enough to understand with the inline comments.
+
+### Training data -- DNN
+* trainInps is an N x D-dimensional array. N feature vectors each having D dimensions
+* labels is a vector of dimensionality N containing a label for each feature vector
+* trainTargs converts the labels vector into numberic classes and  1-hot target vectors for the DNN or MRDNN training
+
+### Training data -- Manifold based graphs
+- The network reads in pre-computed affinity graphs for the manifold data. Each graph W is a N x N sparse matrix represented by two matrices:
+
+
 ### Dependencies
 gnumpy: http://www.cs.toronto.edu/~tijmen/gnumpy.html
 

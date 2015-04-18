@@ -1,13 +1,8 @@
 """
- Copyright (c) 2011,2012 George Dahl
+ Copyright (c) 2013,2014, 2015 Vikrant Tomar
+ Based on the code by George Dahl
 
- Permission is hereby granted, free of charge, to any person  obtaining
- a copy of this software and associated documentation  files (the
- "Software"), to deal in the Software without  restriction, including
- without limitation the rights to use,  copy, modify, merge, publish,
- distribute, sublicense, and/or sell  copies of the Software, and to
- permit persons to whom the  Software is furnished to do so, subject
- to the following conditions:
+ License: GPL v3. See attached LICENSE file
 
  The above copyright notice and this permission notice shall be
  included in all copies or substantial portions of the Software.  THE
@@ -83,8 +78,6 @@ class Sigmoid(object):
     def dEdNetInput(self, acts):
         return acts*(1-acts)
     def error(self, targets, netInput, acts = None):
-        #return (targets*logOnePlusExp(-netInput) + (1-targets)*logOnePlusExp(netInput)).sum()
-        #return (logOnePlusExp(netInput)-targets*netInput).sum()
         return (netInput.log_1_plus_exp()-targets*netInput).sum()
     error3d = error
     def HProd(self, vect, acts):
@@ -93,7 +86,6 @@ class Sigmoid(object):
         if acts == None:
             acts = self.activation(netInput)
         return acts - targets
-        # return (acts - targets)*acts*(1-acts) #Vikrant
 
 #You can write tanh in terms of sigmoid.
 #def tanh(ar):
