@@ -240,7 +240,7 @@ class DBN(object):
 			if validSet:
 				val_outputActs = self.fprop_xf(validSet['trainInps'])
 				val_error = self.outputActFunct.error(gnp.garray(validSet['trainTargs']), self.state[-1], val_outputActs)                
-				yield sumErr/float(totalCases), val_error/validSet['trainInps'].shape[0]/vals_select.shape[1]
+				yield sumErr/float(totalCases), val_error/validSet['trainInps'].shape[0]
 			else:
 				yield sumErr/float(totalCases)
 	
@@ -300,10 +300,9 @@ class DBN(object):
 
 		ps = self.pivt[-1].shape
 		outputErrSignal = -self.outputActFunct.dErrordNetInput(targetBatch, None, self.actsMLpvt)
-		error_grad = self.outputActFunct.error3d(targetBatch, self.pivt[-1])
+		error = self.outputActFunct.error3d(targetBatch, self.pivt[-1])
 
 		MLerr = 2.0*(self.actsMLpvt - self.actsML)
-		error = error_grad/float(MLerr.shape[1]) + self.mlgamma/(2.0 * self.stateML[-1].shape[1]) * (MLerr**2 * vals).sum()
 		ml_sense, pivt_sense = self.bprop(outputErrSignal, self.mlgamma*MLerr*vals)
 
 		return error, ml_sense, pivt_sense
