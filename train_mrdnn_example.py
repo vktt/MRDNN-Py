@@ -102,9 +102,8 @@ def main():
 	C = np.unique(labels)
 	trainTargs = (np.tile(labels,(len(C),1)).T==C).astype(np.int32)
 	del C
-
-
 	
+	## Manifold based graph's data
 	print 'Load graph-embedding based neighborhs'
 	root_dir += 'path/to/manifold/graph/data/'
 	mlgrph = mlgraph()
@@ -114,7 +113,7 @@ def main():
 
 	### Validation data
 
-	f = np.load('/home/vikrant/data/Aurora4matdata/' + val_data)
+	f = np.load(val_data)
 	validSet={}
 	validSet['trainInps'] = f['trainInps']
 	val_labels = f['trainTargs']
@@ -125,7 +124,6 @@ def main():
 	del C, val_labels, f
 
 	print 'Data load done.'
-	print trainInps.shape, trainTargs.shape, validSet['trainTargs'].shape, validSet['trainInps'].shape
 
 	####################################################################################
 
