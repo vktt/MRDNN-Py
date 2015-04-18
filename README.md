@@ -15,9 +15,9 @@ There is no separate documentation as of yet. But the code should be easy enough
 ### Training data -- Manifold based graphs
 Manifold based relationships are build in the file mrdnn/manifold.py and mrdnn/manifold_noPen.py
 - The network reads in pre-computed affinity graphs for the manifold data. Each graph W is a N x N sparse matrix represented by two matrices:
--- Dist: This is a N x k matrix (k = number of nearest neighbors of each vector). Each j\th row of Dist contains distance of vector x_j to k of it's nearest neighbors.
--- Ind: This is also a N x k matrix. Each row contains the indices of the nearest neighbors saved in Dist.
--- If both the intrinsic and penalty graphs are used, Dist and Ind for these graphs are differenciated by further suffices: Disti and Indi for the intrinsic graph and Distp and Indp for the penalty graph.
+*- Dist: This is a N x k matrix (k = number of nearest neighbors of each vector). Each j\th row of Dist contains distance of vector x_j to k of it's nearest neighbors.
+*- Ind: This is also a N x k matrix. Each row contains the indices of the nearest neighbors saved in Dist.
+*- If both the intrinsic and penalty graphs are used, Dist and Ind for these graphs are differenciated by further suffices: Disti and Indi for the intrinsic graph and Distp and Indp for the penalty graph.
 
 ### Dependencies
 gnumpy: http://www.cs.toronto.edu/~tijmen/gnumpy.html
