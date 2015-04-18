@@ -200,7 +200,7 @@ def main():
 	plt.xlabel('Number of Epochs')
 	plt.ylabel('Cross Entropy Error')
 	plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.08), ncol=2, fancybox=True, shadow=True)
-	plt.savefig('figures/a4/'+netname+'_epc'+str(epochs)+'.pdf')
+	plt.savefig('figures/'+netname+'_epc'+str(epochs)+'.pdf')
 
 	print 'Network training done.'
 
