@@ -3,7 +3,7 @@ Manifold Regularized Deep Neural Networks written in Python using numpy and gnum
 
 
 ### Background 
-The base of this code (pretrianed deep neural networks) is taken from gdbn code written by George Dahl. http://www.cs.toronto.edu/~gdahl/. I have modified the DNN training by adding manifold regularization to his code. For a detailed overview of Manifold Regularized Neural Networks (MRDNN), please see my paper from Interspeech 2014 here: http://www.ece.mcgill.ca/~vtomar/Publications/Interspeech2014-MRDNN.pdf
+The base of this code (pretrianed deep neural networks) is taken from gdbn code written by George Dahl. http://www.cs.toronto.edu/~gdahl/. I have modified the DNN training by adding manifold regularization to his code. For a detailed overview of Manifold Regularized Neural Networks (MRDNN), please see my paper from Interspeech 2014 here: http://www.ece.mcgill.ca/~vtomar/Publications/Interspeech2014-MRDNN.pdf . Please cite the paper if you use this code. I have also uploaded a pdf for the system architecture: MRDNN_architecture.pdf in the repository. 
 
 There is no separate documentation as of yet. But the code should be easy enough to understand with the inline comments.
 

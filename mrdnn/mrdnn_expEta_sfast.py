@@ -14,6 +14,14 @@
  ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING  FROM, OUT OF OR IN
  CONNECTION WITH THE SOFTWARE OR THE USE OR  OTHER DEALINGS IN THE
  SOFTWARE.
+
+The base of this code (pretrianed deep neural networks) is taken from 
+gdbn code written by George Dahl. http://www.cs.toronto.edu/~gdahl/. 
+I have modified the DNN training by adding manifold regularization to 
+his code. For a detailed overview of Manifold Regularized Neural Networks (MRDNN), 
+please see my paper from Interspeech 2014 here: 
+http://www.ece.mcgill.ca/~vtomar/Publications/Interspeech2014-MRDNN.pdf . 
+Please cite the paper if you use this code. 
 """
 
 import numpy as num
