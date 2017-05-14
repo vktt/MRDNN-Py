@@ -2,8 +2,8 @@
 Manifold Regularized Deep Neural Networks written in Python using numpy and gnumpy to run on GPUs.
 
 
-### Background 
-The base of this code (pretrianed deep neural networks) is taken from gdbn code written by George Dahl. http://www.cs.toronto.edu/~gdahl/. I have modified the DNN training by adding manifold regularization to his code. For a detailed overview of Manifold Regularized Neural Networks (MRDNN), please see my paper from Interspeech 2014 here: http://www.ece.mcgill.ca/~vtomar/Publications/Interspeech2014-MRDNN.pdf . Please cite the paper if you use this code. I have also uploaded a pdf for the system architecture: MRDNN_architecture.pdf in the repository. 
+### Background
+The base of this code (pre-trained deep neural networks) is taken from gdbn code written by George Dahl. http://www.cs.toronto.edu/~gdahl/. I have modified the DNN training by adding manifold regularization to his code. For a detailed overview of Manifold Regularized Neural Networks (MRDNN), please see my paper from Interspeech 2014 here: http://www.ece.mcgill.ca/~vtomar/Publications/Interspeech2014-MRDNN.pdf . Please cite the paper if you use this code. I have also uploaded a pdf for the system architecture: MRDNN_architecture.pdf in the repository.
 
 There is no separate documentation as of yet. But the code should be easy enough to understand with the inline comments.
 
@@ -20,12 +20,12 @@ Manifold based relationships are build in the file mrdnn/manifold.py and mrdnn/m
 * If both the intrinsic and penalty graphs are used, Dist and Ind for these graphs are differenciated by further suffices: Disti and Indi for the intrinsic graph and Distp and Indp for the penalty graph.
 
 ### Dependencies
-gnumpy: http://www.cs.toronto.edu/~tijmen/gnumpy.html
-
-cudamat: http://code.google.com/p/cudamat/ (for running on GPUs), or
+gnumpy: Is available in the helpers folder, but originally taken from: http://www.cs.toronto.edu/~tijmen/gnumpy.html
 
 npmat: http://www.cs.toronto.edu/~ilya/npmat.py) (a non-gpu cudamat simulation)
 
-### License 
+cudamat: http://code.google.com/p/cudamat/ (for running on GPUs), or
 
-GPL v3
+### License
+
+See LICENSE file
